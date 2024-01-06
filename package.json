@@ -1,0 +1,22 @@
+{
+  "name": "jsblock",
+  "version": "0.0.1",
+  "description": "a recreation of MineCraft in three.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "jsBlock"
+  },
+  "keywords": [
+    "minecraft",
+    "threejs"
+  ],
+  "author": "SkyTheDragon",
+  "license": "ISC",
+  "dependencies": {
+    "parcel": "^2.11.0"
+  }
+}
