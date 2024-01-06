@@ -17,6 +17,8 @@
   "author": "SkyTheDragon",
   "license": "ISC",
   "dependencies": {
-    "parcel": "^2.11.0"
+    "http-server": "^14.1.1",
+    "parcel": "^2.11.0",
+    "three": "^0.160.0"
   }
 }
