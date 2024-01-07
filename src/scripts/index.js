@@ -38,11 +38,16 @@ const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
 scene.add(dirLight);
 dirLight.position.set(1,1,1);
 
+let dt = 0.01;
+let lastTime = new Date().getTime();
+
 function renderGame(time) {
-    box.rotation.x += time/100000;
-    box.rotation.y += time/100000;
+    dt = time - lastTime;
+    box.rotation.x += dt/1000;
+    box.rotation.y += dt/1000;
     console.log(time);
     renderer.render(scene, camera);
+    lastTime = time;
 };
 
 renderer.setAnimationLoop(renderGame);
