@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as datgui from 'dat.gui';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
 const renderer = new THREE.WebGLRenderer();
@@ -25,14 +26,16 @@ camera.position.set(2,2,5);
 orbit.update();
 
 const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshBasicMaterial({color: 0x006700});
+const boxMaterial = new THREE.MeshStandardMaterial({color: 0x006700});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
 
+const dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+
 function renderGame(time) {
-    box.rotation.x += time/1000;
-    box.rotation.y += time/1000;
+    box.rotation.x += time/10000;
+    box.rotation.y += time/10000;
     renderer.render(scene, camera);
 }
 
