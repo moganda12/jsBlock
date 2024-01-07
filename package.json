@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "a recreation of MineCraft in three.js",
   "scripts": {
-    "test": "parcel build ./src/index.html"
+    "test": "sh compile.sh"
   },
   "repository": {
     "type": "git",
