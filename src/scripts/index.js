@@ -20,7 +20,7 @@ const camera = new THREE.PerspectiveCamera(
 const orbit = new OrbitControls(camera, renderer.domElement);
 
 const textureLoader = new THREE.TextureLoader();
-const dirt = textureLoader.load('assets/minecraft/textures/dirt.png');
+const dirt = 'assets/minecraft/textures/dirt.png'
 
 const axis = new THREE.AxesHelper(5);
 scene.add(axis);
@@ -29,7 +29,7 @@ camera.position.set(2,2,5);
 orbit.update();
 
 const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshStandardMaterial({color: 0xFFFFFF, map: dirt});
+const boxMaterial = new THREE.MeshStandardMaterial({color: 0xFFFFFF, map: textureLoader.load(dirt)});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
