@@ -20,7 +20,7 @@ const camera = new THREE.PerspectiveCamera(
 const orbit = new OrbitControls(camera, renderer.domElement);
 
 const textureLoader = new THREE.TextureLoader();
-const dirt = './assets/minecraft/textures/dirt.png'
+const dirt = './assets/minecraft/texture/block/dit.png';
 
 const axis = new THREE.AxesHelper(5);
 scene.add(axis);
