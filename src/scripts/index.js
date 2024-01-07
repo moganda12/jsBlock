@@ -25,9 +25,6 @@ const dirt = './assets/minecraft/textures/block/dirt.png';
 const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
-camera.position.set(2,2,5);
-firstperson.update();
-
 const boxGeometry = new THREE.BoxGeometry();
 const boxMaterial = new THREE.MeshStandardMaterial({color: 0xFFFFFF, map: textureLoader.load(dirt)});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
