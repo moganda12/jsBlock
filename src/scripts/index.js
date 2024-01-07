@@ -48,9 +48,18 @@ const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
 scene.add(dirLight);
 dirLight.position.set(1,1,1);
 
+let title = document.getElementById('title');
 
 renderer.domElement.addEventListener('click', () => {
     firstperson.lock();
+});
+
+firstperson.addEventListener('lock', () => {
+    title.style.display = 'none';
+});
+
+firstperson.addEventListener('unlock', () => {
+    title.style.display = 'block';
 });
 
 let dt = 0.01;
