@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as datgui from 'dat.gui';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
 
 const renderer = new THREE.WebGLRenderer();
 
@@ -17,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-const orbit = new OrbitControls(camera, renderer.domElement);
+const orbit = new FirstPersonControls(camera, renderer.domElement);
 
 const textureLoader = new THREE.TextureLoader();
 const dirt = './assets/minecraft/textures/block/dirt.png';
