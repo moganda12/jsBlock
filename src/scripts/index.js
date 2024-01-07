@@ -31,6 +31,9 @@ const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
 
+const ambience = new THREE.AmbientLight(0x333333);
+scene.add(ambience);
+
 const dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
 scene.add(dirLight);
 
