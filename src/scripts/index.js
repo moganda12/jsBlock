@@ -39,8 +39,8 @@ scene.add(dirLight);
 dirLight.position.set(1,1,1);
 
 function renderGame(time) {
-    box.rotation.x += time/10000;
-    box.rotation.y += time/10000;
+    box.rotation.x += time/100000;
+    box.rotation.y += time/100000;
     console.log(time);
     renderer.render(scene, camera);
 };
