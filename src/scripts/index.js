@@ -17,6 +17,8 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
+camera.position(10, 10, 10);
+
 const firstperson = new PointerLockControls( camera, renderer.domElement );
 
 const textureLoader = new THREE.TextureLoader();
@@ -39,6 +41,11 @@ scene.add(ambience);
 const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
 scene.add(dirLight);
 dirLight.position.set(1,1,1);
+
+
+renderer.domElement.addEventListener('click', function() {
+    firstperson.lock();
+})
 
 let dt = 0.01;
 let lastTime = new Date().getTime();
