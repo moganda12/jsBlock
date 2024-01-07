@@ -26,7 +26,7 @@ camera.position.set(2,2,5);
 orbit.update();
 
 const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshStandardMaterial({color: 0x006700});
+const boxMaterial = new THREE.MeshStandardMaterial({color: 0x00FF00});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
@@ -34,13 +34,15 @@ scene.add(box);
 const ambience = new THREE.AmbientLight(0x333333);
 scene.add(ambience);
 
-const dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
 scene.add(dirLight);
+dirLight.position.set(1,1,1);
 
 function renderGame(time) {
     box.rotation.x += time/10000;
     box.rotation.y += time/10000;
+    console.log(time);
     renderer.render(scene, camera);
-}
+};
 
 renderer.setAnimationLoop(renderGame);
