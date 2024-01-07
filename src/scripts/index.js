@@ -26,4 +26,10 @@ const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
 
-renderer.render(scene, camera);
+function renderGame() {
+    box.rotation.x += 0.1;
+    box.rotation.y += 0.1;
+    renderer.render(scene, camera);
+}
+
+renderer.setAnimationLoop(renderGame);
