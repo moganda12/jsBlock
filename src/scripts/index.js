@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
 const renderer = new THREE.WebGLRenderer();
 
@@ -15,10 +16,13 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
+const orbit = new OrbitControls(camera, renderer.domElement);
+
 const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
 camera.position.set(2,2,5);
+orbit.update();
 
 const boxGeometry = new THREE.BoxGeometry();
 const boxMaterial = new THREE.MeshBasicMaterial({color: 0x006700});
@@ -26,9 +30,9 @@ const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
 
-function renderGame() {
-    box.rotation.x += 0.1;
-    box.rotation.y += 0.1;
+function renderGame(time) {
+    box.rotation.x += time/1000;
+    box.rotation.y += time/1000;
     renderer.render(scene, camera);
 }
 
