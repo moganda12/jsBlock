@@ -17,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-camera.position.set(10, 10, 10);
+camera.position.set(5, 5, 5);
 
 const firstperson = new PointerLockControls( camera, renderer.domElement );
 
@@ -53,90 +53,19 @@ renderer.domElement.addEventListener('click', () => {
     firstperson.lock();
 });
 
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
-let moveUp = false;
-let moveDown = false;
-
-document.addEventListener('keydown', (kevent) => {
-    switch (kevent.code) {
-        case 'ArrowUp':
-        case 'keyW':
-            moveForward = true;
-            break;
-        case 'ArrowDown':
-        case 'keyS':
-            moveBackward = true;
-            break;
-        case 'ArrowLeft':
-        case 'keyA':
-            moveLeft = true;
-            break;
-        case 'ArrowRight':
-        case 'keyD':
-            moveRight = true;
-            break;
-        case 'keyR':
-            moveUp = true;
-            break;
-        case 'keyF':
-            moveDown = true;
-            break;
-        default:
-            break;
-    };
-});
-
-document.addEventListener('keyup', (kevent) => {
-    switch (kevent.code) {
-        case 'ArrowUp':
-        case 'keyW':
-            moveForward = false;
-            break;
-        case 'ArrowDown':
-        case 'keyS':
-            moveBackward = false;
-            break;
-        case 'ArrowLeft':
-        case 'keyA':
-            moveLeft = false;
-            break;
-        case 'ArrowRight':
-        case 'keyD':
-            moveRight = false;
-            break;
-        case 'keyR':
-            moveUp = false;
-            break;
-        case 'keyF':
-            moveDown = false;
-            break;
-        default:
-            break;
-    };
-});
-
 let dt = 0.01;
 let lastTime = new Date().getTime();
 
 function renderGame(time) {
-    let velocity = new THREE.Vector3();
-    let velz = moveBackward - moveForward;
-    let velx = moveRight - moveLeft;
-    let vely = moveDown - moveUp;
-    let v3dmul = Math.sqrt(velz+velx+vely);
-    velx *= v3dmul;
-    vely *= v3dmul;
-    velz *= v3dmul;
-    velocity.set(velx,vely,velz);
-    camera.position.x += velocity.x * dt;
-    camera.position.y += velocity.y * dt;
-    camera.position.z += velocity.z * dt;
     dt = time - lastTime;
     renderer.render(scene, camera);
     lastTime = time;
 };
 
 renderer.setAnimationLoop(renderGame);
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
