@@ -19,6 +19,9 @@ const camera = new THREE.PerspectiveCamera(
 
 const orbit = new OrbitControls(camera, renderer.domElement);
 
+const textureLoader = new THREE.TextureLoader();
+const dirt = textureLoader.load('assets/minecraft/textures/dirt.png');
+
 const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
@@ -26,10 +29,12 @@ camera.position.set(2,2,5);
 orbit.update();
 
 const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshStandardMaterial({color: 0x00FF00});
+const boxMaterial = new THREE.MeshStandardMaterial({color: 0xFFFFFF, map: dirt});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
+
+box.position.set(1,1,1);
 
 const ambience = new THREE.AmbientLight(0x333333);
 scene.add(ambience);
@@ -43,8 +48,6 @@ let lastTime = new Date().getTime();
 
 function renderGame(time) {
     dt = time - lastTime;
-    box.rotation.x += dt/1000;
-    box.rotation.y += dt/1000;
     renderer.render(scene, camera);
     lastTime = time;
 };
