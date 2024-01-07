@@ -17,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-camera.position(10, 10, 10);
+camera.position.set(10, 10, 10);
 
 const firstperson = new PointerLockControls( camera, renderer.domElement );
 
