@@ -131,7 +131,9 @@ function renderGame(time) {
     vely *= v3dmul;
     velz *= v3dmul;
     velocity.set(velx,vely,velz);
-    camera.position += velocity;
+    camera.position.x += velocity.x * dt;
+    camera.position.y += velocity.y * dt;
+    camera.position.z += velocity.z * dt;
     dt = time - lastTime;
     renderer.render(scene, camera);
     lastTime = time;
