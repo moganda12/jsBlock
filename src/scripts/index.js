@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as datgui from 'dat.gui';
-import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
+import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls.js';
 
 const renderer = new THREE.WebGLRenderer();
 
@@ -17,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-const orbit = new FirstPersonControls(camera, renderer.domElement);
+const firstperson = new PointerLockControls( camera, renderer.domElement );
 
 const textureLoader = new THREE.TextureLoader();
 const dirt = './assets/minecraft/textures/block/dirt.png';
@@ -26,7 +26,7 @@ const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
 camera.position.set(2,2,5);
-orbit.update();
+firstperson.update();
 
 const boxGeometry = new THREE.BoxGeometry();
 const boxMaterial = new THREE.MeshStandardMaterial({color: 0xFFFFFF, map: textureLoader.load(dirt)});
