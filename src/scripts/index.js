@@ -45,7 +45,6 @@ function renderGame(time) {
     dt = time - lastTime;
     box.rotation.x += dt/1000;
     box.rotation.y += dt/1000;
-    console.log(time);
     renderer.render(scene, camera);
     lastTime = time;
 };
