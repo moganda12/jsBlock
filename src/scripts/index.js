@@ -32,6 +32,7 @@ const box = new THREE.Mesh(boxGeometry, boxMaterial);
 scene.add(box);
 
 const dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+scene.add(dirLight);
 
 function renderGame(time) {
     box.rotation.x += time/10000;
