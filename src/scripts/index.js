@@ -40,9 +40,6 @@ scene.add(axis);
 
 const boxGeometry = new THREE.BoxGeometry();
 const boxMaterial = new THREE.MeshLambertMaterial({map: dirt});
-const box = new THREE.Mesh(boxGeometry, boxMaterial);
-
-scene.add(box);
 
 box.position.set(1,1,1);
 
@@ -131,6 +128,13 @@ document.addEventListener('keyup', (keyEvent) => {
             break;
     }
 });
+
+for(let x = 0; x < 16; x++) {
+    for(let y = 0; y < 16; y++) {
+        const box = new THREE.Mesh(boxGeometry, boxMaterial);
+        scene.add(box);
+    }
+}
 
 let dt = 0.01;
 let lastTime = performance.now();
