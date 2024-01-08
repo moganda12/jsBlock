@@ -130,7 +130,7 @@ document.addEventListener('keyup', (keyEvent) => {
 for(let x = 0; x < 16; x++) {
     for(let z = 0; z < 16; z++) {
         const box = new THREE.Mesh(boxGeometry, boxMaterial);
-        box.position.set(x, 0.5, y);
+        box.position.set(x, 0.5, z);
         scene.add(box);
     }
 }
