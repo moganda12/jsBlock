@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import * as datgui from 'dat.gui';
+import Stats from 'stats.js'
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls.js';
+
+const stats = new Stats()
+stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom)
 
 const renderer = new THREE.WebGLRenderer();
 
@@ -80,11 +85,11 @@ document.addEventListener('keydown', (keyEvent) => {
             break;
         case 'ArrowLeft':
         case 'KeyA':
-            moveSpeed.x += 1;
+            moveSpeed.x -= 1;
             break;
         case 'ArrowRight':
         case 'KeyD':
-            moveSpeed.x -= 1;
+            moveSpeed.x += 1;
             break;
         case 'KeyR':
             moveSpeed.y += 1;
@@ -126,16 +131,22 @@ let dt = 0.01;
 let lastTime = performance.now();
 
 function renderGame() {
+    stats.begin();
     let time = performance.now();
     dt = time - lastTime;
     if(locked) {
         let moveCorMod = Math.sqrt(Math.abs(moveSpeed.x) + Math.abs(moveSpeed.y) + Math.abs(moveSpeed.z));
-        moveSpeed.multiplyScalar(moveCorMod);
-        moveSpeed.multiplyScalar(dt/1000);
-        camera.position.add(moveSpeed);
-    }
+        let finalSpeed = moveSpeed;
+        finalSpeed.multiplyScalar(moveCorMod);
+        finalSpeed.multiplyScalar(dt/1000);
+        finalSpeed.multiplyScalar(5);
+        firstperson.moveRight(finalSpeed.x);
+        firstperson.moveForward(finalSpeed.z);
+        camera.position.y += finalSpeed.y;
+    };
     renderer.render(scene, camera);
     lastTime = time;
+    stats.end();
 };
 
 renderer.setAnimationLoop(renderGame);
