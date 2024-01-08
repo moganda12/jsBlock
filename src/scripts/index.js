@@ -66,8 +66,7 @@ firstperson.addEventListener('unlock', () => {
     locked = false;
 });
 
-/** @type {THREE.Vector3} */
-let moveSpeed = THREE.Vector3();
+let moveSpeed = new THREE.Vector3();
 
 document.addEventListener('keydown', (keyEvent) => {
     switch (keyEvent.code) {
