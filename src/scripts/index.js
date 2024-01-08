@@ -41,8 +41,6 @@ scene.add(axis);
 const boxGeometry = new THREE.BoxGeometry();
 const boxMaterial = new THREE.MeshLambertMaterial({map: dirt});
 
-box.position.set(1,1,1);
-
 const ambience = new THREE.AmbientLight();
 scene.add(ambience);
 ambience.intensity = 0.1;
