@@ -46,10 +46,10 @@ scene.add(box);
 
 box.position.set(1,1,1);
 
-const ambience = new THREE.AmbientLight(0x333333);
+const ambience = new THREE.AmbientLight(0x666666);
 scene.add(ambience);
 
-const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
+const dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
 scene.add(dirLight);
 dirLight.position.set(1,1,1);
 
