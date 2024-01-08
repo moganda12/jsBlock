@@ -34,7 +34,7 @@ const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
 const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshStandardMaterial({color: 0xFFFFFF, map: dirt});
+const boxMaterial = new THREE.MeshStandardMaterial({map: dirt});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
@@ -50,23 +50,91 @@ dirLight.position.set(1,1,1);
 
 let title = document.getElementById('title');
 
+let locked = false;
+
 renderer.domElement.addEventListener('click', () => {
     firstperson.lock();
 });
 
 firstperson.addEventListener('lock', () => {
     title.style.display = 'none';
+    locked = true;
 });
 
 firstperson.addEventListener('unlock', () => {
     title.style.display = 'block';
+    locked = false;
+});
+
+/** @type {THREE.Vector3} */
+let moveSpeed = THREE.Vector3();
+
+document.addEventListener('keydown', (keyEvent) => {
+    switch (keyEvent.code) {
+        case 'ArrowUp':
+        case 'KeyW':
+            moveSpeed.z += 1;
+            break;
+        case 'ArrowDown':
+        case 'KeyS':
+            moveSpeed.z -= 1;
+            break;
+        case 'ArrowLeft':
+        case 'KeyA':
+            moveSpeed.x += 1;
+            break;
+        case 'ArrowRight':
+        case 'KeyD':
+            moveSpeed.x -= 1;
+            break;
+        case 'KeyR':
+            moveSpeed.y += 1;
+            break;
+        case 'KeyF':
+            moveSpeed.y -= 1;
+            break;
+    }
+});
+
+document.addEventListener('keyup', (keyEvent) => {
+    switch (keyEvent.code) {
+        case 'ArrowUp':
+        case 'KeyW':
+            moveSpeed.z -= 1;
+            break;
+        case 'ArrowDown':
+        case 'KeyS':
+            moveSpeed.z += 1;
+            break;
+        case 'ArrowLeft':
+        case 'KeyA':
+            moveSpeed.x -= 1;
+            break;
+        case 'ArrowRight':
+        case 'KeyD':
+            moveSpeed.x += 1;
+            break;
+        case 'KeyR':
+            moveSpeed.y -= 1;
+            break;
+        case 'KeyF':
+            moveSpeed.y += 1;
+            break;
+    }
 });
 
 let dt = 0.01;
-let lastTime = new Date().getTime();
+let lastTime = performance.now();
 
-function renderGame(time) {
+function renderGame() {
+    let time = performance.now();
     dt = time - lastTime;
+    if(locked) {
+        let moveCorMod = Math.sqrt(Math.abs(moveSpeed.x) + Math.abs(moveSpeed.y) + Math.abs(moveSpeed.z));
+        moveSpeed.multiplyScalar(moveCorMod);
+        moveSpeed.multiplyScalar(dt/1000);
+        camera.position.add(moveSpeed);
+    }
     renderer.render(scene, camera);
     lastTime = time;
 };
