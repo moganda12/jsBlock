@@ -46,12 +46,17 @@ scene.add(box);
 
 box.position.set(1,1,1);
 
-const ambience = new THREE.AmbientLight(0x666666);
+const ambience = new THREE.AmbientLight();
 scene.add(ambience);
+ambience.intensity = 0.1;
 
-const dirLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+const dirLight = new THREE.DirectionalLight();
 scene.add(dirLight);
 dirLight.position.set(1,1,1);
+
+const dirLight2 = new THREE.DirectionalLight();
+scene.add(dirLight2);
+dirLight2.position.set(-1,1,-0.5);
 
 let title = document.getElementById('title');
 
