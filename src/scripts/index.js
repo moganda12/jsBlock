@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as datgui from 'dat.gui';
-import Stats from 'stats.js'
+import Stats from 'stats.js';
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls.js';
 
 const stats = new Stats()
