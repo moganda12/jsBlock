@@ -39,7 +39,7 @@ const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
 const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshBasicMaterial({map: dirt});
+const boxMaterial = new THREE.MeshLambertMaterial({map: dirt});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
 scene.add(box);
