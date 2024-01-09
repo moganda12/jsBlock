@@ -147,6 +147,9 @@ for (let y = 0; y < cellSize; ++y) {
     };
 };
 
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshPhongMaterial({color: 'green'});
+
 for (let y = 0; y < cellSize; ++y) {
     for (let z = 0; z < cellSize; ++z) {
         for (let x = 0; x < cellSize; ++x) {
@@ -155,7 +158,7 @@ for (let y = 0; y < cellSize; ++y) {
                          x;
             const block = cell[offset];
             if(block === 1) {
-                const mesh = new THREE.Mesh(boxMaterial, boxGeometry);
+                const mesh = new THREE.Mesh(geometry, material);
                 mesh.position.set(x, y, z);
                 scene.add(mesh);
             };
