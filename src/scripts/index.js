@@ -38,9 +38,6 @@ const dirt = loadTexture('./assets/minecraft/textures/block/dirt.png');
 const axis = new THREE.AxesHelper(5);
 scene.add(axis);
 
-const boxGeometry = new THREE.BoxGeometry();
-const boxMaterial = new THREE.MeshLambertMaterial({map: dirt});
-
 const ambience = new THREE.AmbientLight();
 scene.add(ambience);
 ambience.intensity = 0.1;
@@ -130,38 +127,41 @@ document.addEventListener('keyup', (keyEvent) => {
 let dt = 0.01;
 let lastTime = performance.now();
 
+const boxGeometry = new THREE.BoxGeometry();
+const boxMaterial = new THREE.MeshLambertMaterial({map: dirt});
+
 const cellSize = 256;
 const cell = new Uint8Array(cellSize * cellSize * cellSize);
 
 for (let y = 0; y < cellSize; ++y) {
     for (let z = 0; z < cellSize; ++z) {
-      for (let x = 0; x < cellSize; ++x) {
-        const height = (Math.sin(x / cellSize * Math.PI * 4) + Math.sin(z / cellSize * Math.PI * 6)) * 20 + cellSize / 2;
-        if (height > y && height < y + 1) {
-          const offset = y * cellSize * cellSize +
-                         z * cellSize +
-                         x;
-          cell[offset] = 1;
-        }
-      }
-    }
-  }
+        for (let x = 0; x < cellSize; ++x) {
+            const height = (Math.sin(x / cellSize * Math.PI * 4) + Math.sin(z / cellSize * Math.PI * 6)) * 20 + cellSize / 2;
+            if (height > y && height < y + 1) {
+                const offset = y * cellSize * cellSize +
+                               z * cellSize +
+                               x;
+                cell[offset] = 1;
+            };
+        };
+    };
+};
 
 for (let y = 0; y < cellSize; ++y) {
-  for (let z = 0; z < cellSize; ++z) {
-    for (let x = 0; x < cellSize; ++x) {
-      const offset = y * cellSize * cellSize +
-                     z * cellSize +
-                     x;
-      const block = cell[offset];
-      if(block === 1) {
-        const mesh = new THREE.Mesh(boxMaterial, boxGeometry);
-        mesh.position.set(x, y, z);
-        scene.add(mesh);
-      };
-    }
-  }
-}
+    for (let z = 0; z < cellSize; ++z) {
+        for (let x = 0; x < cellSize; ++x) {
+            const offset = y * cellSize * cellSize +
+                         z * cellSize +
+                         x;
+            const block = cell[offset];
+            if(block === 1) {
+                const mesh = new THREE.Mesh(boxMaterial, boxGeometry);
+                mesh.position.set(x, y, z);
+                scene.add(mesh);
+            };
+        };
+    };
+};
 
 function renderGame() {
     stats.begin();
