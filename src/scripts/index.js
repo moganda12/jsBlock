@@ -127,16 +127,41 @@ document.addEventListener('keyup', (keyEvent) => {
     }
 });
 
-for(let x = 0; x < 16; x++) {
-    for(let z = 0; z < 16; z++) {
-        const box = new THREE.Mesh(boxGeometry, boxMaterial);
-        box.position.set(x, 0.5, z);
-        scene.add(box);
-    }
-}
-
 let dt = 0.01;
 let lastTime = performance.now();
+
+const cellSize = 256;
+const cell = new Uint8Array(cellSize * cellSize * cellSize);
+
+for (let y = 0; y < cellSize; ++y) {
+    for (let z = 0; z < cellSize; ++z) {
+      for (let x = 0; x < cellSize; ++x) {
+        const height = (Math.sin(x / cellSize * Math.PI * 4) + Math.sin(z / cellSize * Math.PI * 6)) * 20 + cellSize / 2;
+        if (height > y && height < y + 1) {
+          const offset = y * cellSize * cellSize +
+                         z * cellSize +
+                         x;
+          cell[offset] = 1;
+        }
+      }
+    }
+  }
+
+for (let y = 0; y < cellSize; ++y) {
+  for (let z = 0; z < cellSize; ++z) {
+    for (let x = 0; x < cellSize; ++x) {
+      const offset = y * cellSize * cellSize +
+                     z * cellSize +
+                     x;
+      const block = cell[offset];
+      if(block === 1) {
+        const mesh = new THREE.Mesh(boxMaterial, boxGeometry);
+        mesh.position.set(x, y, z);
+        scene.add(mesh);
+      };
+    }
+  }
+}
 
 function renderGame() {
     stats.begin();
