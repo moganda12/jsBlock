@@ -1,3 +1,9 @@
 .parcel-cache
 dist
 node_modules
+.git
+.replit
+replit.nix
+.upm
+.config
+site.zip
