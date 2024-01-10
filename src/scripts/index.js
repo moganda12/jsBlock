@@ -134,6 +134,10 @@ class VoxelWorld {
 	constructor( options ) {
 
 		this.cellSize = options.cellSize;
+		this.tileSize = options.tileSize;
+		this.tileTextureWidth = options.tileTextureWidth;
+		this.tileTextureHeight = options.tileTextureHeight;
+		const { cellSize } = this;
 		this.cellSliceSize = cellSize * cellSize;
 		this.cell = new Uint8Array( cellSize * cellSize * cellSize );
 
@@ -192,11 +196,11 @@ class VoxelWorld {
 	}
 	generateGeometryDataForCell( cellX, cellY, cellZ ) {
 
-		const { cellSize } = this;
+		const { cellSize, tileSize, tileTextureWidth, tileTextureHeight } = this;
 		const positions = [];
 		const normals = [];
-		const indices = [];
 		const uvs = [];
+		const indices = [];
 		const startX = cellX * cellSize;
 		const startY = cellY * cellSize;
 		const startZ = cellZ * cellSize;
@@ -213,8 +217,10 @@ class VoxelWorld {
 					const voxel = this.getVoxel( voxelX, voxelY, voxelZ );
 					if ( voxel ) {
 
+						// voxel 0 is sky (empty) so for UVs we start at 0
+						const uvVoxel = voxel - 1;
 						// There is a voxel here but do we need faces for it?
-						for ( const { dir, corners } of VoxelWorld.faces ) {
+						for ( const { dir, corners, uvRow } of VoxelWorld.faces ) {
 
 							const neighbor = this.getVoxel(
 								voxelX + dir[ 0 ],
@@ -224,12 +230,14 @@ class VoxelWorld {
 
 								// this voxel has no neighbor in this direction so we need a face.
 								const ndx = positions.length / 3;
-								for ( const {pos, uvs} of corners ) {
+								for ( const { pos, uv } of corners ) {
 
 									positions.push( pos[ 0 ] + x, pos[ 1 ] + y, pos[ 2 ] + z );
 									normals.push( ...dir );
+									uvs.push(
+										( uvVoxel + uv[ 0 ] ) * tileSize / tileTextureWidth,
+										1 - ( uvRow + 1 - uv[ 1 ] ) * tileSize / tileTextureHeight );
 
-									uvs.push(uv[0],uv[1]);
 								}
 
 								indices.push(
@@ -252,104 +260,86 @@ class VoxelWorld {
 		return {
 			positions,
 			normals,
+			uvs,
 			indices,
-			uvs
 		};
 
 	}
 
 }
 
+const loader = new THREE.TextureLoader();
+const texture = loader.load( 'https://threejs.org/manual/examples/resources/images/minecraft/flourish-cc-by-nc-sa.png');
+
 VoxelWorld.faces = [
-	  { // left
+	{ // left
 		uvRow: 0,
-		dir: [ -1,  0,  0, ],
+		dir: [ - 1, 0, 0, ],
 		corners: [
-		  [ 0, 1, 0 ],
-		  [ 0, 0, 0 ],
-		  [ 0, 1, 1 ],
-		  [ 0, 0, 1 ],
-		  { pos: [ 0, 1, 0 ], uv: [ 0, 1 ], },
-		  { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
-		  { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-		  { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
+			{ pos: [ 0, 1, 0 ], uv: [ 0, 1 ], },
+			{ pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
+			{ pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+			{ pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
 		],
-	  },
-	  { // right
+	},
+	{ // right
 		uvRow: 0,
-		dir: [  1,  0,  0, ],
+		dir: [ 1, 0, 0, ],
 		corners: [
-		  [ 1, 1, 1 ],
-		  [ 1, 0, 1 ],
-		  [ 1, 1, 0 ],
-		  [ 1, 0, 0 ],
-		  { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
-		  { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
-		  { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
-		  { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
+			{ pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+			{ pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
+			{ pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
+			{ pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
 		],
-	  },
-	  { // bottom
+	},
+	{ // bottom
 		uvRow: 1,
-		dir: [  0, -1,  0, ],
+		dir: [ 0, - 1, 0, ],
 		corners: [
-		  [ 1, 0, 1 ],
-		  [ 0, 0, 1 ],
-		  [ 1, 0, 0 ],
-		  [ 0, 0, 0 ],
-		  { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
-		  { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-		  { pos: [ 1, 0, 0 ], uv: [ 1, 1 ], },
-		  { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
+			{ pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
+			{ pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+			{ pos: [ 1, 0, 0 ], uv: [ 1, 1 ], },
+			{ pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
 		],
-	  },
-	  { // top
+	},
+	{ // top
 		uvRow: 2,
-		dir: [  0,  1,  0, ],
+		dir: [ 0, 1, 0, ],
 		corners: [
-		  [ 0, 1, 1 ],
-		  [ 1, 1, 1 ],
-		  [ 0, 1, 0 ],
-		  [ 1, 1, 0 ],
-		  { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-		  { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
-		  { pos: [ 0, 1, 0 ], uv: [ 1, 0 ], },
-		  { pos: [ 1, 1, 0 ], uv: [ 0, 0 ], },
+			{ pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+			{ pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+			{ pos: [ 0, 1, 0 ], uv: [ 1, 0 ], },
+			{ pos: [ 1, 1, 0 ], uv: [ 0, 0 ], },
 		],
-	  },
-	  { // back
+	},
+	{ // back
 		uvRow: 0,
-		dir: [  0,  0, -1, ],
+		dir: [ 0, 0, - 1, ],
 		corners: [
-		  [ 1, 0, 0 ],
-		  [ 0, 0, 0 ],
-		  [ 1, 1, 0 ],
-		  [ 0, 1, 0 ],
-		  { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
-		  { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
-		  { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
-		  { pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
+			{ pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
+			{ pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
+			{ pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
+			{ pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
 		],
-	  },
-	  { // front
+	},
+	{ // front
 		uvRow: 0,
-		dir: [  0,  0,  1, ],
+		dir: [ 0, 0, 1, ],
 		corners: [
-		  [ 0, 0, 1 ],
-		  [ 1, 0, 1 ],
-		  [ 0, 1, 1 ],
-		  [ 1, 1, 1 ],
-		  { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-		  { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
-		  { pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
-		  { pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
+			{ pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+			{ pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
+			{ pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
+			{ pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
 		],
 	},
 ];
 
 const cellSize = 32;
 
-const world = new VoxelWorld( cellSize );
+const world = new VoxelWorld( {
+	cellSize,
+	16,
+	256,} );
 
 for ( let y = 0; y < cellSize; ++ y ) {
 
@@ -360,7 +350,7 @@ for ( let y = 0; y < cellSize; ++ y ) {
 			const height = ( Math.sin( x / cellSize * Math.PI * 2 ) + Math.sin( z / cellSize * Math.PI * 3 ) ) * ( cellSize / 6 ) + ( cellSize / 2 );
 			if ( y < height ) {
 
-				world.setVoxel( x, y, z, 1 );
+				world.setVoxel( x, y, z, randInt( 1, 17 ) );
 
 			}
 
@@ -370,10 +360,16 @@ for ( let y = 0; y < cellSize; ++ y ) {
 
 }
 
+function randInt( min, max ) {
+
+	return Math.floor( Math.random() * ( max - min ) + min );
+
+}
+
 const { positions, normals, indices, uvs } = world.generateGeometryDataForCell( 0, 0, 0 );
 const geometry = new THREE.BufferGeometry();
 const material = new THREE.MeshStandardMaterial( { 
-	map: dirt,
+	map: texture,
 	side: THREE.DoubleSide,
 	alphaTest: 0.1,
 	transparent: true,
