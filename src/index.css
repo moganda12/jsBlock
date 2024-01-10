@@ -7,6 +7,7 @@
 
 #ver {
 	position: absolute;
-	right: 100%;
+	right: 0px;
+	top: 0px;
 	color: #fff;
 }
