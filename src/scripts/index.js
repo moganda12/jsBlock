@@ -129,8 +129,6 @@ document.addEventListener('keyup', (keyEvent) => {
 let dt = 0.01;
 let lastTime = performance.now();
 
-const dirtBlock = new THREE.MeshLambertMaterial({texture: dirt});
-
 class VoxelWorld {
 
 	constructor( options ) {
