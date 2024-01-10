@@ -133,9 +133,9 @@ const dirtBlock = new THREE.MeshLambertMaterial({texture: dirt});
 
 class VoxelWorld {
 
-	constructor( cellSize ) {
+	constructor( options ) {
 
-		this.cellSize = cellSize;
+		this.cellSize = options.cellSize;
 		this.cellSliceSize = cellSize * cellSize;
 		this.cell = new Uint8Array( cellSize * cellSize * cellSize );
 
@@ -198,6 +198,7 @@ class VoxelWorld {
 		const positions = [];
 		const normals = [];
 		const indices = [];
+		const uvs = [];
 		const startX = cellX * cellSize;
 		const startY = cellY * cellSize;
 		const startZ = cellZ * cellSize;
@@ -225,11 +226,12 @@ class VoxelWorld {
 
 								// this voxel has no neighbor in this direction so we need a face.
 								const ndx = positions.length / 3;
-								for ( const pos of corners ) {
+								for ( const {pos, uvs} of corners ) {
 
 									positions.push( pos[ 0 ] + x, pos[ 1 ] + y, pos[ 2 ] + z );
 									normals.push( ...dir );
 
+									uvs.push(uv[0],uv[1]);
 								}
 
 								indices.push(
@@ -253,6 +255,7 @@ class VoxelWorld {
 			positions,
 			normals,
 			indices,
+			uvs
 		};
 
 	}
@@ -260,58 +263,88 @@ class VoxelWorld {
 }
 
 VoxelWorld.faces = [
-	{ // left
-		dir: [ - 1, 0, 0, ],
+	  { // left
+		uvRow: 0,
+		dir: [ -1,  0,  0, ],
 		corners: [
-			[ 0, 1, 0 ],
-			[ 0, 0, 0 ],
-			[ 0, 1, 1 ],
-			[ 0, 0, 1 ],
+		  [ 0, 1, 0 ],
+		  [ 0, 0, 0 ],
+		  [ 0, 1, 1 ],
+		  [ 0, 0, 1 ],
+		  { pos: [ 0, 1, 0 ], uv: [ 0, 1 ], },
+		  { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
+		  { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+		  { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
 		],
-	},
-	{ // right
-		dir: [ 1, 0, 0, ],
+	  },
+	  { // right
+		uvRow: 0,
+		dir: [  1,  0,  0, ],
 		corners: [
-			[ 1, 1, 1 ],
-			[ 1, 0, 1 ],
-			[ 1, 1, 0 ],
-			[ 1, 0, 0 ],
+		  [ 1, 1, 1 ],
+		  [ 1, 0, 1 ],
+		  [ 1, 1, 0 ],
+		  [ 1, 0, 0 ],
+		  { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+		  { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
+		  { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
+		  { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
 		],
-	},
-	{ // bottom
-		dir: [ 0, - 1, 0, ],
+	  },
+	  { // bottom
+		uvRow: 1,
+		dir: [  0, -1,  0, ],
 		corners: [
-			[ 1, 0, 1 ],
-			[ 0, 0, 1 ],
-			[ 1, 0, 0 ],
-			[ 0, 0, 0 ],
+		  [ 1, 0, 1 ],
+		  [ 0, 0, 1 ],
+		  [ 1, 0, 0 ],
+		  [ 0, 0, 0 ],
+		  { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
+		  { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+		  { pos: [ 1, 0, 0 ], uv: [ 1, 1 ], },
+		  { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
 		],
-	},
-	{ // top
-		dir: [ 0, 1, 0, ],
+	  },
+	  { // top
+		uvRow: 2,
+		dir: [  0,  1,  0, ],
 		corners: [
-			[ 0, 1, 1 ],
-			[ 1, 1, 1 ],
-			[ 0, 1, 0 ],
-			[ 1, 1, 0 ],
+		  [ 0, 1, 1 ],
+		  [ 1, 1, 1 ],
+		  [ 0, 1, 0 ],
+		  [ 1, 1, 0 ],
+		  { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+		  { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+		  { pos: [ 0, 1, 0 ], uv: [ 1, 0 ], },
+		  { pos: [ 1, 1, 0 ], uv: [ 0, 0 ], },
 		],
-	},
-	{ // back
-		dir: [ 0, 0, - 1, ],
+	  },
+	  { // back
+		uvRow: 0,
+		dir: [  0,  0, -1, ],
 		corners: [
-			[ 1, 0, 0 ],
-			[ 0, 0, 0 ],
-			[ 1, 1, 0 ],
-			[ 0, 1, 0 ],
+		  [ 1, 0, 0 ],
+		  [ 0, 0, 0 ],
+		  [ 1, 1, 0 ],
+		  [ 0, 1, 0 ],
+		  { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
+		  { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
+		  { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
+		  { pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
 		],
-	},
-	{ // front
-		dir: [ 0, 0, 1, ],
+	  },
+	  { // front
+		uvRow: 0,
+		dir: [  0,  0,  1, ],
 		corners: [
-			[ 0, 0, 1 ],
-			[ 1, 0, 1 ],
-			[ 0, 1, 1 ],
-			[ 1, 1, 1 ],
+		  [ 0, 0, 1 ],
+		  [ 1, 0, 1 ],
+		  [ 0, 1, 1 ],
+		  [ 1, 1, 1 ],
+		  { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+		  { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
+		  { pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
+		  { pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
 		],
 	},
 ];
@@ -339,18 +372,27 @@ for ( let y = 0; y < cellSize; ++ y ) {
 
 }
 
-const { positions, normals, indices } = world.generateGeometryDataForCell( 0, 0, 0 );
+const { positions, normals, indices, uvs } = world.generateGeometryDataForCell( 0, 0, 0 );
 const geometry = new THREE.BufferGeometry();
-const material = new THREE.MeshLambertMaterial( { color: 'green' } );
+const material = new THREE.MeshStandardMaterial( { 
+	map: dirt,
+	side: THREE.DoubleSide,
+	alphaTest: 0.1,
+	transparent: true,
+} );
 
 const positionNumComponents = 3;
 const normalNumComponents = 3;
+const uvNumComponents = 2;
 geometry.setAttribute(
 	'position',
 	new THREE.BufferAttribute( new Float32Array( positions ), positionNumComponents ) );
 geometry.setAttribute(
 	'normal',
 	new THREE.BufferAttribute( new Float32Array( normals ), normalNumComponents ) );
+geometry.setAttribute(
+	'uv',
+	new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
 geometry.setIndex( indices );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh );
