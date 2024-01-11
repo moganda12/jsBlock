@@ -335,11 +335,16 @@ VoxelWorld.faces = [
 ];
 
 const cellSize = 32;
+const tileSize = 16;
+const tileTextureWidth = 256;
+const tileTextureHeight = 64;
 
-const world = new VoxelWorld( {
-	cellSize,
-	16,
-	256,} );
+const world = new VoxelWorld({
+  cellSize,
+  tileSize,
+  tileTextureWidth,
+  tileTextureHeight,
+});
 
 for ( let y = 0; y < cellSize; ++ y ) {
 
